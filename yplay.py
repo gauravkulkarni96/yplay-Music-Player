@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 import youtube_dl
 import requests
+import random
 import sys
 import re
 import os
@@ -35,18 +36,29 @@ def get_video_id(song_name):
 def search_songs(video_id):
 	return os.path.exists(DOWNLOAD_PATH+video_id+'.mp3')
 
+def select_random_song():
+	songs = os.listdir(DOWNLOAD_PATH)
+	if len(songs) == 0:
+		print("No downloaded songs!")
+		exit(0)
+	return random.choice(songs).split(".")[0]
+
+
 if __name__ == "__main__":
 	if len(sys.argv) == 1:
 		print("Please pass the song name\n")
 		exit(0)
-	song_name = "%20".join(sys.argv[1:])
-	video_id = get_video_id(song_name)
-	song_exists = search_songs(video_id)
-	if not song_exists:
-		try:
-			download_song(video_id)
-		except:
-			print("Could not download the song. Try again!\n")
-			exit(0)
+	if sys.argv[1] == "-random":
+		video_id = select_random_song()
+	else:
+		song_name = "%20".join(sys.argv[1:])
+		video_id = get_video_id(song_name)
+		song_exists = search_songs(video_id)
+		if not song_exists:
+			try:
+				download_song(video_id)
+			except:
+				print("Could not download the song. Try again!\n")
+				exit(0)
 	command = "vlc "+DOWNLOAD_PATH+video_id+".mp3"
 	os.system(command)

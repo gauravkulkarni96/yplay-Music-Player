@@ -1,2 +1,8 @@
-pip install youtube_dl
-sodo apt-get install ffmpeg
+# Yplay Music Player
+
+Yplay player is based on youtube videos for downloading songs based on the keywords provided. The song, if not already present is downloaded and played using VLC player.
+
+# Installation
+1. ```pip install -r requirements.txt```
+2. ```sodo apt-get install ffmpeg```
+3. Run ```python yplay.py [song keywords]``` eg. ```python yplay.py the night we met```

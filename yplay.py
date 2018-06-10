@@ -45,10 +45,7 @@ def select_random_song():
 
 
 if __name__ == "__main__":
-	if len(sys.argv) == 1:
-		print("Please pass the song name\n")
-		exit(0)
-	if sys.argv[1] == "-random":
+	if len(sys.argv) == 1 or sys.argv[1] == "-random":
 		video_id = select_random_song()
 	else:
 		song_name = "%20".join(sys.argv[1:])

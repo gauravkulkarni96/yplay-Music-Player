@@ -57,5 +57,5 @@ if __name__ == "__main__":
 			except:
 				print("Could not download the song. Try again!\n")
 				exit(0)
-	command = "vlc "+DOWNLOAD_PATH+video_id+".mp3"
+	command = "vlc --play-and-exit "+DOWNLOAD_PATH+video_id+".mp3"
 	os.system(command)

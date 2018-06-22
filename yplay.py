@@ -45,10 +45,17 @@ def select_random_song():
 
 
 if __name__ == "__main__":
-	if len(sys.argv) == 1 or sys.argv[1] == "-random":
-		video_id = select_random_song()
-		command = "vlc --play-and-exit "+DOWNLOAD_PATH+video_id+".mp3"
-		os.system(command)
+	if len(sys.argv) == 1 or sys.argv[1] == "-random" or sys.argv[1] == "-r":
+		count = 1
+		if len(sys.argv) == 3:
+			try:
+				count = int(sys.argv[2])
+			except:
+				pass
+		for loop_counter in range(count):
+			video_id = select_random_song()
+			command = "vlc --play-and-exit "+DOWNLOAD_PATH+video_id+".mp3"
+			os.system(command)
 	else:
 		songs = "%20".join(sys.argv[1:])
 		songs = songs.replace("%20,", ",")

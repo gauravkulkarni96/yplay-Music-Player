@@ -43,6 +43,14 @@ def select_random_song():
 		exit(0)
 	return random.choice(songs).split(".")[0]
 
+def select_n_random_songs(n):
+	songs = os.listdir(DOWNLOAD_PATH)
+	if len(songs) == 0:
+		print("No downloaded songs!")
+		exit(0)
+	if n > len(songs):
+		n = len(songs)
+	return random.sample(songs, n)
 
 if __name__ == "__main__":
 	if len(sys.argv) == 1 or sys.argv[1] == "-random" or sys.argv[1] == "-r":
@@ -52,9 +60,9 @@ if __name__ == "__main__":
 				count = int(sys.argv[2])
 			except:
 				pass
-		for loop_counter in range(count):
-			video_id = select_random_song()
-			command = "vlc --play-and-exit "+DOWNLOAD_PATH+video_id+".mp3"
+		selected_songs = select_n_random_songs(count)
+		for song_file_name in selected_songs:
+			command = "vlc --play-and-exit " + DOWNLOAD_PATH + song_file_name
 			os.system(command)
 	else:
 		songs = "%20".join(sys.argv[1:])

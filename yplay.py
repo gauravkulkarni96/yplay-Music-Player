@@ -36,13 +36,6 @@ def get_video_id(song_name):
 def search_songs(video_id):
 	return os.path.exists(DOWNLOAD_PATH+video_id+'.mp3')
 
-def select_random_song():
-	songs = os.listdir(DOWNLOAD_PATH)
-	if len(songs) == 0:
-		print("No downloaded songs!")
-		exit(0)
-	return random.choice(songs).split(".")[0]
-
 def select_n_random_songs(n):
 	songs = os.listdir(DOWNLOAD_PATH)
 	if len(songs) == 0:

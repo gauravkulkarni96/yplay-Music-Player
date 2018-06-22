@@ -47,15 +47,22 @@ def select_random_song():
 if __name__ == "__main__":
 	if len(sys.argv) == 1 or sys.argv[1] == "-random":
 		video_id = select_random_song()
+		command = "vlc --play-and-exit "+DOWNLOAD_PATH+video_id+".mp3"
+		os.system(command)
 	else:
-		song_name = "%20".join(sys.argv[1:])
-		video_id = get_video_id(song_name)
-		song_exists = search_songs(video_id)
-		if not song_exists:
-			try:
-				download_song(video_id)
-			except:
-				print("Could not download the song. Try again!\n")
-				exit(0)
-	command = "vlc --play-and-exit "+DOWNLOAD_PATH+video_id+".mp3"
-	os.system(command)
+		songs = "%20".join(sys.argv[1:])
+		songs = songs.replace("%20,", ",")
+		songs = songs.replace(",%20", ",")
+		songs_list = songs.split(",")
+		for song_name in songs_list:
+			video_id = get_video_id(song_name)
+			song_exists = search_songs(video_id)
+			if not song_exists:
+				try:
+					download_song(video_id)
+				except:
+					print("Could not download the song. Try again!\n")
+					exit(0)
+			print("Now Playing: {}".format(" ".join(song_name.split("%20"))))
+			command = "vlc --play-and-exit "+DOWNLOAD_PATH+video_id+".mp3"
+			os.system(command)

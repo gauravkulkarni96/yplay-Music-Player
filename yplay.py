@@ -8,8 +8,7 @@ import os
 
 DOWNLOAD_PATH = os.path.expanduser("~")+'/Documents/.yplay/'
 
-def download_song(video_id):
-	ydl_opts = {
+ydl_opts = {
 		'outtmpl': DOWNLOAD_PATH+'%(id)s.%(ext)s',
 	    'format': 'bestaudio/best',
 	    'postprocessors': [{
@@ -18,9 +17,14 @@ def download_song(video_id):
 	        'preferredquality': '192',
 	    }],
 	}
-	link = "https://www.youtube.com/watch?v="+video_id
+
+def download_song_by_link(link):
 	with youtube_dl.YoutubeDL(ydl_opts) as ydl:
 	    ydl.download([link])
+
+def download_song_by_id(video_id):
+	link = "https://www.youtube.com/watch?v="+video_id
+	download_song_by_link(link)
 	return
 
 def get_video_id(song_name):
@@ -36,6 +40,13 @@ def get_video_id(song_name):
 def search_songs(video_id):
 	return os.path.exists(DOWNLOAD_PATH+video_id+'.mp3')
 
+def get_songs_list_from_arguments(system_arguments):
+	songs = "%20".join(system_arguments)
+	songs = songs.replace("%20,", ",")
+	songs = songs.replace(",%20", ",")
+	songs_list = songs.split(",")
+	return songs_list
+
 def select_n_random_songs(n):
 	songs = os.listdir(DOWNLOAD_PATH)
 	if len(songs) == 0:
@@ -44,6 +55,20 @@ def select_n_random_songs(n):
 	if n > len(songs):
 		n = len(songs)
 	return random.sample(songs, n)
+
+def youtube_link_is_valid(link):
+	# TODO
+	return True
+
+def play_songs(song_files_list):
+	for song_file_name in song_files_list:
+		if not song_file_name.endswith(".mp3"):
+			song_file_name+=".mp3"
+		command = "vlc --play-and-exit " + DOWNLOAD_PATH + song_file_name
+		os.system(command)
+
+def get_video_id_from_link(link):
+	return link.split("/")[-1]
 
 if __name__ == "__main__":
 	if len(sys.argv) == 1 or sys.argv[1] == "-random" or sys.argv[1] == "-r":
@@ -54,23 +79,26 @@ if __name__ == "__main__":
 			except:
 				pass
 		selected_songs = select_n_random_songs(count)
-		for song_file_name in selected_songs:
-			command = "vlc --play-and-exit " + DOWNLOAD_PATH + song_file_name
-			os.system(command)
+		play_songs(selected_songs)
+			
+	elif sys.argv[1] == "-manual" or sys.argv[1] == "-m":
+		song_link = sys.argv[2]
+		if not youtube_link_is_valid(song_link):
+			print("Incorrect youtube Link!!")
+			exit(0)
+		download_song_by_link(link)
+		video_id = get_video_id_from_link(link)
+		play_songs([video_id])
 	else:
-		songs = "%20".join(sys.argv[1:])
-		songs = songs.replace("%20,", ",")
-		songs = songs.replace(",%20", ",")
-		songs_list = songs.split(",")
+		songs_list = get_songs_list_from_arguments(sys.argv[1:])
 		for song_name in songs_list:
 			video_id = get_video_id(song_name)
 			song_exists = search_songs(video_id)
 			if not song_exists:
 				try:
-					download_song(video_id)
+					download_song_by_id(video_id)
 				except:
 					print("Could not download the song. Try again!\n")
 					exit(0)
 			print("Now Playing: {}".format(" ".join(song_name.split("%20"))))
-			command = "vlc --play-and-exit "+DOWNLOAD_PATH+video_id+".mp3"
-			os.system(command)
+			play_songs([video_id])

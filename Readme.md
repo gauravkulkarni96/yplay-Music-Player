@@ -8,13 +8,12 @@ Yplay player is based on youtube videos for downloading songs based on the keywo
 
 # Using Yplay
 - Run ```python yplay.py [song keywords]``` eg. ```python yplay.py the night we met```
-- To play multiple songs, run the command with comma separated song keywords. 
-
-eg.```python yplay.py lonestar amazed, with or without you```
+- To play multiple songs, run the command with comma separated song keywords.  
+    eg.```python yplay.py lonestar amazed, with or without you```
 
 ## Options
-1. -r : To play any random song from downloaded ones.
-
-```python yplay.py -r``` or just run ```python yplay.py```
-
-To play multiple random songs, run the command with number of songs you wish to play eg. ```python yplay.py -r 5```
+1. -r : Play any random song from downloaded ones.  
+    ```python yplay.py -r``` or just run ```python yplay.py```  
+    To play multiple random songs, run the command with number of songs you wish to play eg. ```python yplay.py -r 5```
+2. -m : Manual download by supplying link.  
+    ```python yplay.py -m <youtube_link_to_video>``` eg. ```python yplay.py -m https://www.youtube.com/watch?v=x-skFgrV59A```

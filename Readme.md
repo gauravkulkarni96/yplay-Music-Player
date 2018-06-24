@@ -9,7 +9,12 @@ Yplay player is based on youtube videos for downloading songs based on the keywo
 # Using Yplay
 - Run ```python yplay.py [song keywords]``` eg. ```python yplay.py the night we met```
 - To play multiple songs, run the command with comma separated song keywords.  
-    eg.```python yplay.py lonestar amazed, with or without you```
+    eg.```python yplay.py lonestar amazed, with or without you```  
+- Tip: Add alias to run the file ```alias yplay="python <path_to_yplay.py>"``` for easy usage. All the commands can then be run using just ```yplay``` from anywhere on the computer unstead of running ```python yplay.py``` inside the folder.  
+eg. If you have cloned the repository on Desktop, then  
+```alias yplay="python ~/Desktop/yplay-Music-Player/yplay,py"```  
+and the script can be run as  
+```yplay lonestar amazed, with or without you```
 
 ## Options
 1. -r : Play any random song from downloaded ones.  

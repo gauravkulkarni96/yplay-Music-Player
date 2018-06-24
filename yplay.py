@@ -70,7 +70,7 @@ def play_songs(song_files_list):
 		os.system(command)
 
 def get_video_id_from_link(link):
-	return link.split("/")[-1]
+	return link.split("=")[-1]
 
 if __name__ == "__main__":
 	if len(sys.argv) == 1 or sys.argv[1] == "-random" or sys.argv[1] == "-r":

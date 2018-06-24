@@ -88,8 +88,8 @@ if __name__ == "__main__":
 		if not youtube_link_is_valid(song_link):
 			print("Incorrect youtube Link!!")
 			exit(0)
-		download_song_by_link(link)
-		video_id = get_video_id_from_link(link)
+		download_song_by_link(song_link)
+		video_id = get_video_id_from_link(song_link)
 		play_songs([video_id])
 	else:
 		songs_list = get_songs_list_from_arguments(sys.argv[1:])

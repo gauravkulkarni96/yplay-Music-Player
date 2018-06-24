@@ -7,8 +7,13 @@ import re
 import os
 
 DOWNLOAD_PATH = os.path.expanduser("~")+'/Documents/.yplay/'
-
-ydl_opts = {
+HEADERS = {
+	'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'
+	}
+YOUTUBE_SEARCH_URL = "https://www.youtube.com/results?search_query="
+YOUTUBE_VIDEO_BASE_URL = "https://www.youtube.com/watch?v="
+VLC_BASE_COMMAND = "vlc --play-and-exit "
+YDL_OPTS = {
 		'outtmpl': DOWNLOAD_PATH+'%(id)s.%(ext)s',
 	    'format': 'bestaudio/best',
 	    'postprocessors': [{
@@ -19,19 +24,17 @@ ydl_opts = {
 	}
 
 def download_song_by_link(link):
-	with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+	with youtube_dl.YoutubeDL(YDL_OPTS) as ydl:
 	    ydl.download([link])
 
 def download_song_by_id(video_id):
-	link = "https://www.youtube.com/watch?v="+video_id
-	download_song_by_link(link)
+	song_link = YOUTUBE_VIDEO_BASE_URL + video_id
+	download_song_by_link(song_link)
 	return
 
 def get_video_id(song_name):
-	youtube_search_url = "https://www.youtube.com/results?search_query="+song_name
-
-	headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'}
-	page = requests.get(youtube_search_url, headers = headers)
+	song_search_url = YOUTUBE_SEARCH_URL+song_name
+	page = requests.get(song_search_url, headers = HEADERS)
 
 	video_ids = re.findall(r"\"videoId\":\"\w+\"", str(page._content))[0]
 	video_id = video_ids.split(":")[1].strip("\"")
@@ -42,8 +45,7 @@ def search_songs(video_id):
 
 def get_songs_list_from_arguments(system_arguments):
 	songs = "%20".join(system_arguments)
-	songs = songs.replace("%20,", ",")
-	songs = songs.replace(",%20", ",")
+	songs = songs.replace("%20,", ",").replace(",%20", ",")
 	songs_list = songs.split(",")
 	return songs_list
 
@@ -64,7 +66,7 @@ def play_songs(song_files_list):
 	for song_file_name in song_files_list:
 		if not song_file_name.endswith(".mp3"):
 			song_file_name+=".mp3"
-		command = "vlc --play-and-exit " + DOWNLOAD_PATH + song_file_name
+		command = VLC_BASE_COMMAND + DOWNLOAD_PATH + song_file_name
 		os.system(command)
 
 def get_video_id_from_link(link):

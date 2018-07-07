@@ -59,7 +59,15 @@ def select_n_random_songs(n):
 	return random.sample(songs, n)
 
 def youtube_link_is_valid(link):
-	# TODO
+	if not link.startswith("https://"):
+		link = "https://"+link
+	regex = re.compile(
+        r'^(?:http|ftp)s?://' # http:// or https://
+        r'(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.?|[A-Z0-9-]{2,}\.?)|' #domain...
+        r'localhost|' #localhost...
+        r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})' # ...or ip
+        r'(?::\d+)?' # optional port
+        r'(?:/?|[/?]\S+)$', re.IGNORECASE)
 	return True
 
 def play_songs(song_files_list):
@@ -73,6 +81,7 @@ def get_video_id_from_link(link):
 	return link.split("=")[-1]
 
 if __name__ == "__main__":
+	# TODO : -d download only option
 	if len(sys.argv) == 1 or sys.argv[1] == "-random" or sys.argv[1] == "-r":
 		count = 1
 		if len(sys.argv) == 3:

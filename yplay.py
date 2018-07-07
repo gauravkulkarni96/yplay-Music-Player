@@ -68,7 +68,10 @@ def youtube_link_is_valid(link):
         r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})' # ...or ip
         r'(?::\d+)?' # optional port
         r'(?:/?|[/?]\S+)$', re.IGNORECASE)
-	return True
+
+	if "youtube" in link and re.match(regex, link) is not None:
+		return True
+	return
 
 def play_songs(song_files_list):
 	for song_file_name in song_files_list:

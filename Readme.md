@@ -23,3 +23,6 @@ and the script can be run as
     
 2. -m : Manual download by supplying link.  
     ```python yplay.py -m <youtube_link_to_video>``` eg. ```python yplay.py -m https://www.youtube.com/watch?v=x-skFgrV59A```
+
+3. -noplay : Only download the song. No play after download. Can be used anywhere while running the command.  
+    ```python yplay.py carnival of rust -noplay```

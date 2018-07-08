@@ -24,8 +24,11 @@ YDL_OPTS = {
 	}
 
 def download_song_by_link(link):
-	with youtube_dl.YoutubeDL(YDL_OPTS) as ydl:
-	    ydl.download([link])
+	video_id = link.strip(" /").split("/")[-1]
+	song_exists = search_downloaded_songs(video_id)
+	if not song_exists:
+		with youtube_dl.YoutubeDL(YDL_OPTS) as ydl:
+		    ydl.download([link])
 
 def download_song_by_id(video_id):
 	song_link = YOUTUBE_VIDEO_BASE_URL + video_id
@@ -40,7 +43,7 @@ def get_video_id(song_name):
 	video_id = video_ids.split(":")[1].strip("\"")
 	return video_id
 
-def search_songs(video_id):
+def search_downloaded_songs(video_id):
 	return os.path.exists(DOWNLOAD_PATH+video_id+'.mp3')
 
 def get_songs_list_from_arguments(system_arguments):
@@ -84,7 +87,6 @@ def get_video_id_from_link(link):
 	return link.split("=")[-1]
 
 if __name__ == "__main__":
-	# TODO : -d download only option
 	if len(sys.argv) == 1 or sys.argv[1] == "-random" or sys.argv[1] == "-r":
 		count = 1
 		if len(sys.argv) == 3:
@@ -101,18 +103,20 @@ if __name__ == "__main__":
 			print("Incorrect youtube Link!!")
 			exit(0)
 		download_song_by_link(song_link)
-		video_id = get_video_id_from_link(song_link)
-		play_songs([video_id])
+		if "-noplay" not in sys.argv:
+			video_id = get_video_id_from_link(song_link)
+			play_songs([video_id])
 	else:
 		songs_list = get_songs_list_from_arguments(sys.argv[1:])
 		for song_name in songs_list:
 			video_id = get_video_id(song_name)
-			song_exists = search_songs(video_id)
+			song_exists = search_downloaded_songs(video_id)
 			if not song_exists:
 				try:
 					download_song_by_id(video_id)
 				except:
 					print("Could not download the song. Try again!\n")
 					exit(0)
-			print("Now Playing: {}".format(" ".join(song_name.split("%20"))))
-			play_songs([video_id])
+			if "-noplay" not in sys.argv:
+				print("Now Playing: {}".format(" ".join(song_name.split("%20"))))
+				play_songs([video_id])

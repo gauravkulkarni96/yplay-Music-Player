@@ -62,8 +62,6 @@ def select_n_random_songs(n):
 	return random.sample(songs, n)
 
 def youtube_link_is_valid(link):
-	if not link.startswith("https://"):
-		link = "https://"+link
 	regex = re.compile(
         r'^(?:http|ftp)s?://' # http:// or https://
         r'(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.?|[A-Z0-9-]{2,}\.?)|' #domain...
@@ -75,6 +73,12 @@ def youtube_link_is_valid(link):
 	if "youtube" in link and re.match(regex, link) is not None:
 		return True
 	return
+
+def get_cleaned_link(link):
+	link = link.split("&")[0].strip(" /")
+	if not link.startswith("https://"):
+		link = "https://"+link
+	return link
 
 def play_songs(song_files_list):
 	for song_file_name in song_files_list:
@@ -102,6 +106,7 @@ if __name__ == "__main__":
 		if not youtube_link_is_valid(song_link):
 			print("Incorrect youtube Link!!")
 			exit(0)
+		song_link = get_cleaned_link(song_link)
 		download_song_by_link(song_link)
 		if "-noplay" not in sys.argv:
 			video_id = get_video_id_from_link(song_link)

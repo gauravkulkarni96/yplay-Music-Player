@@ -2,9 +2,11 @@ from __future__ import unicode_literals
 import youtube_dl
 import requests
 import random
+from urllib.parse import urlparse
 import sys
 import re
 import os
+from bs4 import BeautifulSoup
 
 DOWNLOAD_PATH = os.path.expanduser("~")+'/Documents/.yplay/'
 HEADERS = {
@@ -38,9 +40,14 @@ def download_song_by_id(video_id):
 def get_video_id(song_name):
 	song_search_url = YOUTUBE_SEARCH_URL+song_name
 	page = requests.get(song_search_url, headers = HEADERS)
-
-	video_ids = re.findall(r"\"videoId\":\"\w+\"", str(page._content))[0]
-	video_id = video_ids.split(":")[1].strip("\"")
+	html_soup = BeautifulSoup(page.content, 'html5lib')
+	
+	links = html_soup.find_all('a', href=True)
+	for a in links:
+		d=a['href']
+		if(d[0:6]=="/watch"):
+			video_id=d[9:]
+			break
 	return video_id
 
 def search_downloaded_songs(video_id):
@@ -100,7 +107,7 @@ if __name__ == "__main__":
 				pass
 		selected_songs = select_n_random_songs(count)
 		play_songs(selected_songs)
-			
+
 	elif sys.argv[1] == "-manual" or sys.argv[1] == "-m":
 		song_link = sys.argv[2]
 		if not youtube_link_is_valid(song_link):
